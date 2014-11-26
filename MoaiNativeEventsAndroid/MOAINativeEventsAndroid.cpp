@@ -32,7 +32,7 @@ int MOAINativeEventsAndroid::_triggerEvent ( lua_State* L ) {
 	
 	if ( state.IsType ( 3, LUA_TFUNCTION )) {
 		
-		MOAIDialogAndroid::Get().mEventCallback.SetRef ( state, 3 );
+		MOAINativeEventsAndroid::Get().mEventCallback.SetRef ( state, 3 );
 	}	
 	
 	JNI_GET_ENV ( jvm, env );
@@ -41,12 +41,13 @@ int MOAINativeEventsAndroid::_triggerEvent ( lua_State* L ) {
 	JNI_GET_JSTRING ( jsonParams, jjsonParams );
 
 	jclass javaNativeEvents = env->FindClass ( "com/whalefood/MoaiNativeEventsPlugin/MoaiNativeEvents" );
-    if ( moai == NULL ) {
+    if ( javaNativeEvents == NULL ) {
 
 		ZLLog::Print ( "MOAINativeEventsAndroid: Unable to find java class %s", "com/whalefood/MoaiNativeEvents" );
+        
     } else {
 
-    	jmethodID jTriggerEvent = env->GetStaticMethodID ( moai, "triggerEvent", "(Ljava/lang/String;Ljava/lang/String;Z)V" );
+    	jmethodID jTriggerEvent = env->GetStaticMethodID ( javaNativeEvents, "triggerEvent", "(Ljava/lang/String;Ljava/lang/String;)V" );
     	if ( jTriggerEvent == NULL ) {
 
 			ZLLog::Print ( "MOAINativeEventsAndroid: Unable to find static java method %s", "triggerEvent" );
@@ -112,4 +113,9 @@ extern "C" void Java_com_whalefood_MoaiNativeEventsPlugin_MoaiNativeEvents_Notif
     
      env->ReleaseStringUTFChars(rslt, cstrRslts);
     
+}
+
+extern "C" void Java_com_whalefood_MoaiNativeEventsPlugin_Test ( JNIEnv* env, jclass obj) {
+    
+    ZLLog::Print ( "Test worked");
 }
