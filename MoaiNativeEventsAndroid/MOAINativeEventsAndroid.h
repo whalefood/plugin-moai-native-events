@@ -20,7 +20,6 @@ private:
 	
         //----------------------------------------------------------------//
         static int	_triggerEvent	( lua_State* L );
-        static int	_triggerCallbackEvent	( lua_State* L );
 
 public:
 	

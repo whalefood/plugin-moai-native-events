@@ -40,10 +40,10 @@ int MOAINativeEventsAndroid::_triggerEvent ( lua_State* L ) {
 	JNI_GET_JSTRING ( eventName, jeventName );
 	JNI_GET_JSTRING ( jsonParams, jjsonParams );
 
-	jclass javaNativeEvents = env->FindClass ( "com/whalefood/MoaiNativeEventsPlugin/MoaiNativeEvents" );
+	jclass javaNativeEvents = env->FindClass ( "com/whalefood/moaiplugins/MoaiNativeEvents" );
     if ( javaNativeEvents == NULL ) {
 
-		ZLLog::Print ( "MOAINativeEventsAndroid: Unable to find java class %s", "com/whalefood/MoaiNativeEvents" );
+		ZLLog::Print ( "MOAINativeEventsAndroid: Unable to find java class %s", "com/whalefood/moaiplugins" );
         
     } else {
 
@@ -105,7 +105,7 @@ void MOAINativeEventsAndroid::NotifyEventFinished (  cc8* rslt ) {
 //================================================================//
 
 //----------------------------------------------------------------//
-extern "C" void Java_com_whalefood_MoaiNativeEventsPlugin_MoaiNativeEvents_NotifyEventFinished ( JNIEnv* env, jclass obj, jstring rslt ) {
+extern "C" void Java_com_whalefood_moaiplugins_MoaiNativeEvents_NotifyEventFinished ( JNIEnv* env, jclass obj, jstring rslt ) {
 
     cc8* cstrRslts = env->GetStringUTFChars(rslt, JNI_FALSE);
 
@@ -115,7 +115,7 @@ extern "C" void Java_com_whalefood_MoaiNativeEventsPlugin_MoaiNativeEvents_Notif
     
 }
 
-extern "C" void Java_com_whalefood_MoaiNativeEventsPlugin_Test ( JNIEnv* env, jclass obj) {
+extern "C" void Java_com_whalefood_moaiplugins_MoaiNativeEvents_Test ( JNIEnv* env, jclass obj) {
     
     ZLLog::Print ( "Test worked");
 }
