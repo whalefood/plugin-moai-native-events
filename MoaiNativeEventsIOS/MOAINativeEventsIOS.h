@@ -1,39 +1,32 @@
-#ifndef MOAINativeEventsIOS_H
-#define MOAINativeEventsIOS_H
 
+
+#import <moai-core/headers.h>
 #import <Foundation/Foundation.h>
-#include <moai-core/headers.h>
-#import "MOAILuaGeneralCallback.h"
+
+// A callback wrapper object
+@interface MOAILuaGeneralCallback : NSObject
+{
+@private
+    MOAILuaStrongRef* internalLuaRef;
+}
+
+- (id)initWithLuaRef:(MOAILuaStrongRef*) ref;
+
+-(void) CallWithParams:(NSDictionary*) parameters;
+
+@end
 
 
 typedef void (^MOAIGenericEventHandler)(NSDictionary*, MOAILuaGeneralCallback*);
 
-//================================================================//
-// MOAINativeEventsIOS
-//================================================================//
-/**	@name	MOAINativeEventsIOS
-	@text	Native event access for iOS devices.
- */
-class MOAINativeEventsIOS: public MOAIGlobalClass < MOAINativeEventsIOS, MOAILuaObject >
-{
-private:
-    
-    MOAILuaStrongRef luaEventsListener;
-    map<string,MOAIGenericEventHandler> nativeEventListeners;
-    
-    //----------------------------------------------------------------//
-    static int	_triggerEvent	( lua_State* L );
-    static int _registerLuaEventListener(lua_State* L );
-    
-public:
-    
-    DECL_LUA_SINGLETON ( MOAINativeEventsIOS )
-    
-    MOAINativeEventsIOS ();
-    ~MOAINativeEventsIOS ();
-    void	RegisterLuaClass ( MOAILuaState& state );
-    static void SetListener(NSString* eventName, MOAIGenericEventHandler);
-    static void TriggerLuaEvent(NSString * eventName, NSDictionary* parameters);
-};
+// The main interface for native events
+@interface MOAINativeEventsIOS : NSObject
 
-#endif
++(void)SetListener:(MOAIGenericEventHandler) listener forEvent:(NSString*)eventName;
++(void)TriggerLuaEvent:(NSString*)eventName withParameters:(NSDictionary*)parameters;
++(void)TriggerNativeEvent:(NSString*)eventName withParameters:(NSDictionary*)parameters
+              andCallback:(MOAILuaGeneralCallback*) callback;
+
+@end
+
+

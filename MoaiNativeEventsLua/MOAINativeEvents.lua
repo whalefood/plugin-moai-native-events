@@ -1,6 +1,6 @@
 MOAINativeEvents = {}
 
-local platformSpecifcObj = MOAINativeEventsIOS or MOAINativeEventsAndroid or nil;
+local platformSpecifcObj = MOAINativeEventsBase;
 
 MOAINativeEvents.RunningOnMobile = platformSpecifcObj ~= nil;
 
