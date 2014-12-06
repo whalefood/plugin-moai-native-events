@@ -7,7 +7,10 @@ set (PLUGIN_ROOT "${CMAKE_CURRENT_SOURCE_DIR}")
 
 
 if(BUILD_IOS)
-	file( GLOB PLUGIN_SRC "${PLUGIN_ROOT}/MoaiNativeEventsIOS/*.mm"  "${PLUGIN_ROOT}/MoaiNativeEventsIOS/*.cpp" "${PLUGIN_ROOT}/*.cpp")
+	file( GLOB PLUGIN_SRC 
+		"${PLUGIN_ROOT}/MoaiNativeEventsIOS/moai-native-events/*.mm"  
+		"${PLUGIN_ROOT}/MoaiNativeEventsIOS/moai-native-events/*.cpp" 
+		"${PLUGIN_ROOT}/moai-native-events/*.cpp")
 	set (PLUGIN_INCLUDES 
 		${PLUGIN_ROOT}
 		${PLUGIN_ROOT}/MoaiNativeEventsIOS
@@ -20,9 +23,6 @@ elseif(BUILD_ANDROID)
 	)
 endif()
 
-set (PLUGIN_INCLUDES 
-	${PLUGIN_ROOT}
-)
 
 add_library(${PLUGIN_TARGET} STATIC ${PLUGIN_SRC} )
 target_include_directories(${PLUGIN_TARGET} PUBLIC ${PLUGIN_INCLUDES})

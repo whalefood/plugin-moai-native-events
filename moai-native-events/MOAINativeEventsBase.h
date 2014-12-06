@@ -1,10 +1,5 @@
 //
 //  MOAINativeEventsBase.h
-//  moai
-//
-//  Created by Jonah Wallerstein on 12/5/14.
-//
-//
 
 #ifndef __moai__MOAINativeEventsBase__
 #define __moai__MOAINativeEventsBase__
@@ -12,10 +7,10 @@
 #include <moai-core/headers.h>
 
 //================================================================//
-// MOAINativeEventsIOS
+// MOAINativeEventsBase
 //================================================================//
-/**	@name	MOAINativeEventsIOS
-	@text	Native event access for iOS devices.
+/**	@name	MOAINativeEventsBase
+	@text	Back end for native event access
  */
 class MOAINativeEventsBase: public MOAIGlobalClass < MOAINativeEventsBase, MOAILuaObject >
 {
