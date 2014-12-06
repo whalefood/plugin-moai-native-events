@@ -2,7 +2,7 @@
 //  MOAINativeEventsIOS.cpp
 
 #import "MOAINativeEventsIOS.h"
-#include "MOAINativeEventsBase.h"
+#include <moai-native-events/MOAINativeEventsBase.h>
 
 @implementation MOAILuaGeneralCallback
 

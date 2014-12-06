@@ -6,7 +6,7 @@
 //
 //
 
-#include "MOAINativeEventsBase.h"
+#include <moai-native-events/MOAINativeEventsBase.h>
 #import <Foundation/Foundation.h>
 #import "MOAINativeEventsIOS.h"
 
