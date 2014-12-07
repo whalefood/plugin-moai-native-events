@@ -16,10 +16,11 @@ if(BUILD_IOS)
 		${PLUGIN_ROOT}/MoaiNativeEventsIOS
 	)
 elseif(BUILD_ANDROID)
-	file( GLOB PLUGIN_SRC "${PLUGIN_ROOT}/MoaiNativeEventsAndroid/*.cpp" "${PLUGIN_ROOT}/*.cpp")
+	file( GLOB PLUGIN_SRC 
+		"${PLUGIN_ROOT}/MoaiNativeEventsAndroid/moai-native-events/*.cpp" 
+		"${PLUGIN_ROOT}/moai-native-events/*.cpp")
 	set (PLUGIN_INCLUDES 
 		${PLUGIN_ROOT}
-		${PLUGIN_ROOT}/MoaiNativeEventsAndroid
 	)
 endif()
 

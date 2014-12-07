@@ -5,27 +5,70 @@ import org.codehaus.jackson.map.ObjectMapper;
 import com.ziplinegames.moai.MoaiLog;
 
 
-
 public class MoaiNativeEvents {
 
-	public  interface EventHandler {
-	    public HashMap<String,Object> eventMethod(HashMap<String,Object> eventParams);
+	public static class LuaCallback
+	{
+		private long CallbackRef;
+		
+		public LuaCallback(long callbackRef)
+		{
+			this.CallbackRef = callbackRef;
+		}
+		
+		public void Run(HashMap<String,Object> params) 
+		{
+			try
+			{
+				MoaiNativeEvents.RunLuaCallback(MoaiNativeEvents.jsonSerializer.writeValueAsString(params), this.CallbackRef);
+			}
+			catch(Exception ex)
+			{
+				MoaiLog.e("Error calling lua callback method.");
+				ex.printStackTrace();
+			}
+		}
 	}
+	
+	public  interface EventHandler {
+	    public void eventMethod(HashMap<String,Object> eventParams, LuaCallback callback);
+	}
+	
 	
 	//the main collection of event handlers
 	private static HashMap<String,EventHandler> EventRegistrar = new HashMap<String, MoaiNativeEvents.EventHandler>();
-	private static ObjectMapper mapper = new ObjectMapper();
 	
-	protected static native void NotifyEventFinished( String rslt);
+
+	private static ObjectMapper jsonSerializer = new ObjectMapper();
 	
-	public static void registerEventHandler(String eventName, EventHandler handler)
+	protected static native void TriggerLuaEvent(String eventName, String params);
+
+	protected static native void RunLuaCallback( String rslt, long callbackPntr);
+	
+	public static void RegisterEventHandler(String eventName, EventHandler handler)
 	{
 		EventRegistrar.put(eventName, handler);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static void triggerEvent(String eventName, String jsnParams)
+	public static void TriggerLuaEvent(String eventName, HashMap<String,Object> eventParams)
 	{
+		String strParams = null;
+		try
+		{
+			strParams = jsonSerializer.writeValueAsString(eventParams);
+		}
+		catch(Exception ex)
+		{
+			MoaiLog.e("Error jsonifying event params for lua event");
+			return;
+		}
+		MoaiNativeEvents.TriggerLuaEvent(eventName, strParams);
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected static void triggerEvent(String eventName, String jsnParams, long callbackPointer)
+	{
+		
 		EventHandler handler = EventRegistrar.get(eventName);
 		
 		if( handler == null)
@@ -35,20 +78,17 @@ public class MoaiNativeEvents {
 		}
 		
 		HashMap<String,Object> inParms =  new HashMap<String, Object>();
-		try {
-			inParms = mapper.readValue(jsnParams, HashMap.class);
-		} catch (Exception e) {
-			MoaiLog.e("Error parsing params for "+eventName);
-			e.printStackTrace();
-			return;
-		} 
+		if(jsnParams != null &&  !jsnParams.trim().equals(""))
+		{
+			try {
+				inParms = jsonSerializer.readValue(jsnParams, HashMap.class);
+			} catch (Exception e) {
+				MoaiLog.e("Error parsing params for "+eventName);
+				e.printStackTrace();
+				return;
+			} 
+		}
 
-		HashMap<String,Object> rslts = handler.eventMethod(inParms);
-		
-		try {
-			NotifyEventFinished(mapper.writeValueAsString(rslts));
-		}catch (Exception e) {
-			e.printStackTrace();
-		} 
+		handler.eventMethod(inParms, new LuaCallback(callbackPointer));
 	}
 }
